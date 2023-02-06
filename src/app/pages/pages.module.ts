@@ -22,7 +22,7 @@ import { ComponentsModule } from '../components/components.module';
     ComponentsModule,
     FormsModule,
     SharedModule,
-    RouterModule,
+    RouterModule
   ],
   exports: [
     DashboardComponent,

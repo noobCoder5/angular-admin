@@ -28,6 +28,14 @@ export class SidebarService {
         {
           titulo: 'Rxjs',
           url: 'rxjs'
+        },
+        {
+          titulo: 'Perfil de usuario',
+          url: 'perfil'
+        },
+        {
+          titulo: 'Usuarios',
+          url: 'usuarios'
         }
       ],
     },

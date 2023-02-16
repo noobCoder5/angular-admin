@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { ElementRef, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, map, Observable, of, tap } from 'rxjs';
+import { catchError, delay, map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
 
 import jwt_decode from 'jwt-decode';
 import { Usuario } from '../models/usuario.model';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 const base_url = environment.base_url;
 
@@ -20,6 +21,14 @@ export class UsuarioService {
   public usuario!: Usuario;
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  get headers(): any {
+    return {
+      headers: {
+        'x-token': this.token,
+      },
+    };
+  }
 
   get token(): string {
     return localStorage.getItem('token') || '';
@@ -46,8 +55,8 @@ export class UsuarioService {
     console.log('Encoded JWT ID token: ' + response.credential);
     this.loginGoogle(response.credential).subscribe(
       (resp) => {
-        const { sub } = this.decodeGoogleToken(response.credential);
-        localStorage.setItem('googleId', sub);
+        //const { sub } = this.decodeGoogleToken(response.credential);
+        //localStorage.setItem('googleId', sub);
         this.router.navigateByUrl('/');
       },
       (err) => console.error
@@ -91,21 +100,15 @@ export class UsuarioService {
   }
 
   validarToken(): Observable<boolean> {
-    return this.http
-      .get(`${base_url}/login/renew`, {
-        headers: {
-          'x-token': this.token,
-        },
-      })
-      .pipe(
-        map((resp: any) => {
-          localStorage.setItem('token', resp.token);
-          const { email, google, nombre, role, img, uid } = resp.usuario;
-          this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
-          return true;
-        }),
-        catchError((error) => of(false))
-      );
+    return this.http.get(`${base_url}/login/renew`, this.headers).pipe(
+      map((resp: any) => {
+        localStorage.setItem('token', resp.token);
+        const { email, google, nombre, role, img, uid } = resp.usuario;
+        this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
+        return true;
+      }),
+      catchError((error) => of(false))
+    );
   }
 
   crearUsuario(formData: RegisterForm) {
@@ -138,10 +141,23 @@ export class UsuarioService {
 
     console.log(data);
 
-    return this.http.put(`${base_url}/usuarios/${this.uid}`, data, {
-      headers: {
-        'x-token': this.token,
-      },
-    });
+    return this.http.put(
+      `${base_url}/usuarios/${this.uid}`,
+      data,
+      this.headers
+    );
+  }
+
+  cargarUsuarios(desde: number = 0): Observable<CargarUsuario> {
+    const url = `${base_url}/usuarios?desde=${desde}`;
+
+    return this.http.get<CargarUsuario>(url, this.headers).pipe(
+      /*delay(5000),*/
+      map((resp: any) => {
+        const usuarios: Usuario[] = resp.usuarios.map((u: any) => new Usuario(u.nombre, u.email, '', u.img, u.google, u.role, u.uid));
+        resp.usuarios = usuarios;
+        return resp;
+      })
+    );
   }
 }

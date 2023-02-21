@@ -36,6 +36,10 @@ export class SidebarService {
         {
           titulo: 'Usuarios',
           url: 'usuarios'
+        },
+        {
+          titulo: 'Hospitales',
+          url: 'hospitales'
         }
       ],
     },

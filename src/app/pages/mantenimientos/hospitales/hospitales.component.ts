@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { delay, Subscription } from 'rxjs';
 import { Hospital } from 'src/app/models/hospital.model';
+import { BusquedasService } from 'src/app/services/busquedas.service';
 import { HospitalService } from 'src/app/services/hospital.service';
 import { ModalImagenService } from 'src/app/services/modal-imagen.service';
 import Swal from 'sweetalert2';
@@ -12,13 +13,16 @@ import Swal from 'sweetalert2';
 })
 export class HospitalesComponent implements OnInit, OnDestroy {
   public hospitales: Hospital[] = [];
+  public hospitalesTemp: Hospital[] = [];
+
   public cargando: boolean = true;
 
   public imgSubs!: Subscription;
 
   constructor(
     private hospitalService: HospitalService,
-    private modalImagenService: ModalImagenService
+    private modalImagenService: ModalImagenService,
+    private busquedasService: BusquedasService
   ) {}
 
   ngOnDestroy(): void {
@@ -39,6 +43,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
       (hospitales) => {
         this.cargando = false;
         this.hospitales = hospitales;
+        this.hospitalesTemp = hospitales;
       },
       (err) => console.error(err)
     );
@@ -60,7 +65,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
   }
 
   async abrirSweetAlert() {
-    const { value } = await Swal.fire({
+    const { value = '' } = await Swal.fire({
       title: 'Crear hospital',
       text: 'Ingrese el nombre del nuevo hospital',
       input: 'text',
@@ -68,7 +73,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
       showCancelButton: true,
     });
 
-    if (value && value.trim().length > 0) {
+    if (value.trim().length > 0) {
       this.hospitalService.crearHospital(value).subscribe((resp: any) => {
         this.hospitales.push(resp.hospital);
       });
@@ -81,5 +86,18 @@ export class HospitalesComponent implements OnInit, OnDestroy {
       hospital._id!,
       hospital.img
     );
+  }
+
+  buscar(termino: string) {
+    console.log(termino);
+    if (termino.length === 0) {
+      //this.hospitales = this.hospitalesTemp;
+      this.cargarHospitales();
+      return;
+    }
+
+    this.busquedasService
+      .buscar('hospitales', termino)
+      .subscribe((hospitales: Hospital[]) => (this.hospitales = hospitales));
   }
 }

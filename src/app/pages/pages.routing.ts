@@ -5,6 +5,8 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Grafica1Component } from './grafica1/grafica1.component';
 import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
+import { MedicoComponent } from './mantenimientos/medicos/medico.component';
+import { MedicosComponent } from './mantenimientos/medicos/medicos.component';
 import { UsuariosComponent } from './mantenimientos/usuarios/usuarios.component';
 import { PagesComponent } from './pages.component';
 import { PerfilComponent } from './perfil/perfil.component';
@@ -63,6 +65,16 @@ const routes: Routes = [
         path: 'hospitales',
         component: HospitalesComponent,
         data: {titulo: 'Hospitales'}
+      },
+      {
+        path: 'medicos',
+        component: MedicosComponent,
+        data: {titulo: 'Médicos'}
+      },
+      {
+        path: 'medico/:id',
+        component: MedicoComponent,
+        data: {titulo: 'Médico'}
       }
     ],
   },

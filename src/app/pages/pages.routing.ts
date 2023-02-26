@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../guards/auth.guard';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { BusquedaComponent } from './busqueda/busqueda.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { Grafica1Component } from './grafica1/grafica1.component';
 import { HospitalesComponent } from './mantenimientos/hospitales/hospitales.component';
@@ -20,6 +21,11 @@ const routes: Routes = [
     component: PagesComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: 'buscar/:termino',
+        component: BusquedaComponent,
+        data: {titulo: 'Búsquedas'}
+      },
       {
         path: '',
         component: DashboardComponent,

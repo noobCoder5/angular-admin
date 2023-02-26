@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <input type="text" class="form-control" placeholder="Buscar médico..."/>
+                <input #txtTermino type="text" class="form-control" placeholder="Buscar médico..." (keyup)="buscar(txtTermino.value)"/>
             </div>
         </div>
     </div>
@@ -26,8 +26,24 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Médicos</h4>
-                <h6 class="card-subtitle">Médicos registrados en la aplicación</h6>
+               
+                <div class="row">
+                    <div class="col-8">
+                        <h4 class="card-title">Médicos ({{ medicos.length }})</h4>
+                        <h6 class="card-subtitle">Médicos registrados en la aplicación</h6>
+                    </div>
+
+                    <div class="col">
+                        <div class="text-right">
+                            <a routerLink="/dashboard/medico/nuevo" class="btn btn-primary">
+                                <i class="fa fa-hospital-o"></i>
+                                Crear médico
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
@@ -43,8 +59,10 @@
 
                                 <td>{{ medico.nombre }}</td>
                                 <td class="text-nowrap text-center">
-                                    <a href="#" data-toggle="tooltip" data-original-title="Editar"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
-                                    <a href="#" data-toggle="tooltip" data-original-title="Borrar"> <i class="fa fa-close text-danger"></i> </a>
+                                    <a [routerLink]="['/dashboard/medico', medico._id]" data-toggle="tooltip" data-original-title="Editar"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
+                                    <a class="cursor" (click)="borrarMedico(medico)" data-toggle="tooltip" data-original-title="Borrar"> 
+                                        <i class="fa fa-close text-danger"></i> 
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>

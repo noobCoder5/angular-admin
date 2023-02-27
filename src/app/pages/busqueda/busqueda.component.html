@@ -4,13 +4,13 @@
             <div class="card-body">
                 <h3 class="card-title">Usuarios</h3>
 
-                <div class="alert alert-info">
+                <div class="alert alert-info" *ngIf="usuarios.length === 0">
                     <p class="mb-0">
                         No hay usuarios con ese término
                     </p>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive" *ngIf="usuarios.length > 0">
                     <table class="table">
                         <thead>
                             <tr>
@@ -19,9 +19,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Avatar</td>
-                                <td>Carlos</td>
+                            <tr *ngFor="let usuario of usuarios" class="animated fadeIn fast">
+                                <td>
+                                    <img [src]="usuario.img || 'no-image' | imagen:'usuarios'" class="w75" />
+                                </td>
+                                <td>{{ usuario.nombre }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -34,13 +36,13 @@
             <div class="card-body">
                 <h3 class="card-title">Médicos</h3>
 
-                <div class="alert alert-info">
+                <div class="alert alert-info" *ngIf="medicos.length === 0">
                     <p class="mb-0">
                         No hay médicos con ese término
                     </p>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive" *ngIf="medicos.length > 0">
                     <table class="table">
                         <thead>
                             <tr>
@@ -49,9 +51,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Avatar</td>
-                                <td>Carlos</td>
+                            <tr *ngFor="let medico of medicos" class="animated fadeIn fast cursor" (click)="abrirMedico(medico)">
+                                <td>
+                                    <img [src]="medico.img || 'no-image' | imagen:'medicos'" class="w75" />
+                                </td>
+                                <td>{{ medico.nombre }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -64,24 +68,26 @@
             <div class="card-body">
                 <h3 class="card-title">Hospitales</h3>
 
-                <div class="alert alert-info">
+                <div class="alert alert-info" *ngIf="hospitales.length === 0">
                     <p class="mb-0">
                         No hay hospitales con ese término
                     </p>
                 </div>
 
-                <div class="table-responsive">
+                <div class="table-responsive" *ngIf="hospitales.length > 0">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Avatar</th>
+                                <th>Foto</th>
                                 <th>Nombre</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Avatar</td>
-                                <td>Carlos</td>
+                            <tr *ngFor="let hospital of hospitales" class="animated fadeIn fast">
+                                <td>
+                                    <img [src]="hospital.img || 'no-image' | imagen:'hospitales'" class="w75" />
+                                </td>
+                                <td>{{ hospital.nombre }}</td>
                             </tr>
                         </tbody>
                     </table>
